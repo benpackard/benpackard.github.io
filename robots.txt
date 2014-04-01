@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: 
+
+Sitemap: http://benpackard.github.io/sitemap.xml 
