@@ -1,0 +1,258 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>The Zooming, Blurring Profile Photo by Tweetbot - My Octopress Blog</title>
+  <meta name="author" content="Your Name">
+
+  
+  <meta name="description" content="Tweetbot is a Twitter client by Tapbots. It is full of thoughtful, playful interactions. One of my favorite details is the zooming header image &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://benpackard.github.io/blog/2014/03/31/the-zooming-blurring-profile-photo-by-tweetbot">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="My Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">My Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:benpackard.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">The Zooming, Blurring Profile Photo by Tweetbot</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-31T21:26:02-04:00" pubdate data-updated="true">Mar 31<span>st</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><a href="http://tapbots.com/software/tweetbot/">Tweetbot</a> is a Twitter client by Tapbots. It is full of thoughtful, playful interactions. One of my favorite details is the zooming header image effect when you scroll a user&rsquo;s profile:</p>
+
+<p><img src="/images/1/original.gif" alt="Original" /></p>
+
+<p>It&rsquo;s a neat way to handle the extra canvas exposed by the elasticity of the scrolling behavior, which can otherwise look a little awkward when the uppermost content is a photo or some other visually busy element. This is especially true when a toolbar is present &ndash; Safari is a good example of the default behavior:</p>
+
+<p><img src="/images/1/safari-scroll.gif" alt="Safari scrolling" /></p>
+
+<p>There&rsquo;s nothing egregious about this interaction; it&rsquo;s just a little clumsy-looking. A big gray box, smack in the middle of the more artfully crafted toolbar and content. Tweetbot turns this same scenario into an opportunity to delight the user.</p>
+
+<!-- more -->
+
+
+<h2>What&rsquo;s Hapenning</h2>
+
+<p>There are three silmultaneous animations occurring as the user scrolls. First, and most obviously, the image expands to fill the available space. Note that the image maintains its aspect ratio, though &ndash; it never stretches. Also, if the background image happens to be taller than the content, the hidden edges of the photo are fully revealed before any scaling takes place.</p>
+
+<p>We also have the gradual fade-out of the user&rsquo;s profile information, and the un-blurring of the image. If you look carefully, the image also brightens as it is revealed &ndash; presumably to ensure enough contrast with the white text in its resting state.</p>
+
+<h2>My Cover</h2>
+
+<p>Let&rsquo;s start by creating two main views inside a scrollview. The &lsquo;profile view&rsquo; will hold the circular photo and all of the user info. I&rsquo;ve given it a gray background for now so its easy to identify. Below the profile view, the &lsquo;content view&rsquo; is just a screenshot from the app since we&rsquo;re not going to be implementing that part.</p>
+
+<p><img src="/images/1/two-subviews.gif" alt="Two subviews" /></p>
+
+<p>Next, we place the header image underneath the profile view. The trick here is to make the image its own independent view in the scroller &ndash; a <em>sibling</em> of the profile view, not a child. This will let us to adjust it with much more freedom since it won&rsquo;t be constrained by the bounds of the profile view.</p>
+
+<p>Also note that I&rsquo;ve used an image that is taller than the profile view so that we can test the zooming action works correctly later.</p>
+
+<p><img src="/images/1/background-added.png" alt="Background added" /></p>
+
+<p>Now we will start animating the zoom. First, we need to re-position the image as the user scrolls to make sure that the photo is always vertically centered between the bottom of the toolbar and the top of the content view. Remember that the profile view doesn&rsquo;t grow in height &ndash; it just moves down the page with the rest of the content. So the center of the image actually moves <em>away</em> from the center of the profile view as the user scrolls. Since I&rsquo;m a fan of autolayout (we do exist), I added an <code>NSLayoutConstraint</code> that does exactly that. For every two pixels of scrolling, one pixel of vertical adjustment is required to maintain a vertical center alignment.</p>
+
+<p><img src="/images/1/centering.gif" alt="Centering" /></p>
+
+<p>Now lets get the zoom working. We can add another constraint here to set the size of the image view to match the native proportions of the image itself. Just like before, this gives us a constant to tweak as the user scrolls.</p>
+
+<p><img src="/images/1/stretching.gif" alt="Stretching" /></p>
+
+<p>Its a start, but the image is stretching. This is easily rectified using one more layout constraint to maintain the original aspect ratio.</p>
+
+<p><img src="/images/1/aspect-ratio.gif" alt="Aspect ratio" /></p>
+
+<p>Much better.</p>
+
+<p>Next we need to blur and darken the image, and only reveal it incrementally. If we place a blurred and darkened copy of the image into the view heirarchy we can just update its transparency. I found a nice implementation of the necessary image adjustments by <a href="https://github.com/bryanjclark/ios-darken-image-with-cifilter">Brian Clark</a> and slotted my new image into place above the real photo.</p>
+
+<p><img src="/images/1/blurred-layer.gif" alt="Blurred layer" /></p>
+
+<p>The blurry image is constrained to maintain the same position and size of the original photo. Now we can simply fade out both the profile info and the blurry image to reveal the photo.</p>
+
+<p><img src="/images/1/almost.gif" alt="Almost right" /></p>
+
+<p>We&rsquo;re almost there. But we&rsquo;re still missing that nice detail from the original &ndash; the hidden top and bottom slivers of the image should be revealed before any zooming takes place. This is accomplished by comparing the height of the image with that of the profile view and storing an &lsquo;overlap&rsquo; value that represents how much of the photo is hidden. Only once the user has scrolled beyond that value does the scaling begin.</p>
+
+<p><img src="/images/1/final.gif" alt="Final version" /></p>
+
+<h2>In the Wild</h2>
+
+<p>I added this same detail into my baseball app <a href="http://nohitteralerts.com">No-Hitter Alerts</a>, though I didn&rsquo;t need the blurring behavior since the image is a known quantity and doesn&rsquo;t obscure the text.</p>
+
+<p><img src="/images/1/no-hitter-alerts.gif" alt="No-Hitter Alerts" /></p>
+
+<h2>The Tab</h2>
+
+<p>The source code for this implementation can be found on [GitHub]. Thanks for reading!</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Your Name</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-31T21:26:02-04:00" pubdate data-updated="true">Mar 31<span>st</span>, 2014</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://benpackard.github.io/blog/2014/03/31/the-zooming-blurring-profile-photo-by-tweetbot/" data-via="" data-counturl="http://benpackard.github.io/blog/2014/03/31/the-zooming-blurring-profile-photo-by-tweetbot/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/03/31/the-zooming-blurring-profile-photo-by-tweetbot/">The Zooming, Blurring Profile Photo by Tweetbot</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Your Name -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,12 +1,18 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
+        <loc>
+            http://benpackard.github.io/blog/2014/03/31/the-zooming-blurring-profile-photo-by-tweetbot/
+        </loc>
+        <lastmod>2014-03-31T21:46:17-04:00</lastmod>
+    </url>
+    <url>
         <loc>http://benpackard.github.io/blog/archives/</loc>
-        <lastmod>2014-03-31T21:06:58-04:00</lastmod>
+        <lastmod>2014-03-31T21:46:17-04:00</lastmod>
     </url>
     <url>
         <loc>http://benpackard.github.io/</loc>
-        <lastmod>2014-03-31T21:06:58-04:00</lastmod>
+        <lastmod>2014-03-31T21:46:17-04:00</lastmod>
     </url>
     <url>
         <loc>http://benpackard.github.io/robots.txt</loc>
