@@ -4,7 +4,7 @@
   <title><![CDATA[Cocoa Covers]]></title>
   <link href="http://cocoacovers.com/atom.xml" rel="self"/>
   <link href="http://cocoacovers.com/"/>
-  <updated>2014-04-01T12:06:00-04:00</updated>
+  <updated>2014-04-03T08:54:45-04:00</updated>
   <id>http://cocoacovers.com/</id>
   <author>
     <name><![CDATA[Ben Packard]]></name>
@@ -43,7 +43,7 @@
 
 <p><img src="http://cocoacovers.com/images/1/two-subviews.gif" alt="Two subviews" /></p>
 
-<p>Next, we place the header image underneath the profile view. The trick here is to make the image its own independent view in the scroller &ndash; a <em>sibling</em> of the profile view, not a child. This will let us to adjust it with much more freedom since it won&rsquo;t be constrained by the bounds of the profile view.</p>
+<p>Next, we place the header image underneath the profile view. The trick here is to make the image its own independent view in the scroller &ndash; a <em>sibling</em> of the profile view, not a child. This will let us adjust it with much more freedom since it won&rsquo;t be constrained by the bounds of the profile view.</p>
 
 <p>Also note that I&rsquo;ve used an image that is taller than the profile view so that we can test the zooming action works correctly later.</p>
 
